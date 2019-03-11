@@ -222,19 +222,27 @@ def collectCombo(input_models=None, input_optims= None, input_funcs=None):
     '''
     if input_models==None:
         list_models = ['vgg16','vgg19','monet','xception','inception','res50']
+        countModels = 6
     else:
         list_models = input_models
+        countModels= len(input_models)
 
     if input_optims==None:
         list_optims = ['rmsprop','adam','sgd','ada_grad','ada_delta','ada_max']
+        countOptims = 6
     else:
         list_optims = input_optims
+        countOptims= len(input_optims)
 
     if input_funcs==None:
         list_funcs = ['softmax','sigmoid']
+        countFuncs = 2
     else:
         list_funcs= input_funcs
+        countFuncs=len(input_funcs)
 
+    countMax= countModels + countOptims+ countFuncs
+    count = 1
     collectHist = dict()
     listMod, listFunc, listOpt, listLoss, listAcc, listTime = [],[],[],[],[],[]
     for mod, func, opt in product(list_models, list_funcs, list_optims):
@@ -250,6 +258,8 @@ def collectCombo(input_models=None, input_optims= None, input_funcs=None):
         listAcc.append(acc)
         listLoss.append(loss)
         listTime.append(deltatime)
+        print(str(count),' / ',str(countMax))
+        count +=1
 
     df = pd.DataFrame(np.c_[listMod, listFunc,listOpt,listAcc,listLoss, listTime],
                 columns =['model','function','optimizer','accuracy','loss', 'time'])
